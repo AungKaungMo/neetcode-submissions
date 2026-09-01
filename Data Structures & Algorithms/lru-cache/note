@@ -1,0 +1,107 @@
+# LRU Cache
+
+## Goal
+
+Design a data structure that tracks item usage and evicts the **least recently used (LRU)** item when its capacity is reached.
+
+## Core Challenge
+
+Both operations must run in **O(1)** time:
+
+* `get(key)`
+* `put(key, value)`
+
+---
+
+## 1. Brute-Force Approach: Array/List
+
+### Key Concept
+
+Use a single list:
+
+```python
+[[key, value], ...]
+```
+
+* **Index `0`** → Least Recently Used (LRU)
+* **Last index** → Most Recently Used (MRU)
+
+### `get(key)`
+
+1. Search the list for the key.
+2. If found:
+
+   * Remove it using `pop(i)`.
+   * Append it to the end to mark it as MRU.
+   * Return its value.
+3. Otherwise, return `-1`.
+
+### `put(key, value)`
+
+* If the key already exists:
+
+  1. Remove the existing item using `pop(i)`.
+  2. Update its value.
+  3. Append it to the end as MRU.
+
+* If the key does not exist:
+
+  1. If the cache is full, use `pop(0)` to evict the LRU item.
+  2. Append the new item as MRU.
+
+### Complexity
+
+| Operation         | Time Complexity |
+| ----------------- | --------------: |
+| `get(key)`        |          `O(N)` |
+| `put(key, value)` |          `O(N)` |
+| Space             |          `O(N)` |
+
+Searching is linear, and removing an item may require shifting array elements.
+
+---
+
+## 2. Built-in Approach: Python `OrderedDict`
+
+### Key Concept
+
+Python's `OrderedDict` internally combines:
+
+* A **hash map** for `O(1)` key lookup
+* A **doubly linked list** for `O(1)` ordering updates
+
+The order represents:
+
+* **Head** → LRU
+* **Tail** → MRU
+
+### `get(key)`
+
+1. Check whether the key exists.
+2. Use `cache.move_to_end(key)` to mark it as MRU.
+3. Return its value.
+
+### `put(key, value)`
+
+1. If the key exists, move it to the end.
+2. Insert or update the value:
+
+```python
+cache[key] = value
+```
+
+3. If the cache exceeds its capacity, remove the LRU item:
+
+```python
+cache.popitem(last=False)
+```
+
+The argument `last=False` removes the item at the head.
+
+### Complexity
+
+| Operation         | Time Complexity |
+| ----------------- | --------------: |
+| `get(key)`        |          `O(1)` |
+| `put(key, value)` |          `O(1)` |
+| Space             |          `O(N)` |
