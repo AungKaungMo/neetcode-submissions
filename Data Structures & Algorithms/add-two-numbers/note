@@ -1,32 +1,25 @@
-# Add Two Numbers
+# **Add Two Numbers**
 
-## Problem
+**Problem:** Given two non-empty linked lists representing two non-negative integers stored in reverse order, add the two numbers and return the sum as a linked list.
 
-Given two non-empty linked lists representing two non-negative integers in reverse order, add the two numbers and return their sum as a linked list.
+**Core Challenge:** Handling digits of unequal list lengths ($m \neq n$) and managing the carry-over digit efficiently, including any leftover carry at the very end (e.g., $99 + 1 = 100$).
 
-## Core Challenge
+**Solution: Dummy Head + Iteration**
 
-Handle:
+**The Key Hint:** Use a **Dummy Head Node** to simplify edge cases when building the output list, and maintain a **`carry`** variable across iterations.
 
-- Linked lists with different lengths ($m \neq n$)
-- Carry-over between digits
-- A remaining carry after both lists end, such as $99 + 1 = 100$
+1. **Alignment:** The lists are already reversed, which is a gift—it aligns the ones place at the head of `l1` and `l2` so you don't have to reverse them first.
 
----
+2. **Unequal Lengths:** If one list runs out of numbers before the other, you padded it with `0` (just like writing 123 + 005).
 
-## Solution: Dummy Head + Iteration
+3. **Carry-over:** If 7 + 8 = 15, you write down `5` (`total % 10`) and carry the `1` (`total // 10`) to the next column.
 
-### Key Concept
+4. **Final Overflow:** If you finish both numbers but still have a carry left over (like $99 + 1 = 100$), you append one last node for the `1`.
 
-Use:
+**Complexity Analysis**
+• **Time Complexity:** O(max(m,n))
+    ◦ The loop runs max(m, n) times (plus at most 1 extra step for a final carry). Each step takes O(1) work.
 
-- A **dummy head node** to simplify building the result list
-- A **`carry`** variable to store the carry-over between iterations
-
-### 1. Reversed Digit Alignment
-
-The numbers are already stored in reverse order. Therefore, the ones digits are located at the heads of `l1` and `l2`.
-
-```text
-342 → 2 → 4 → 3
-465 → 5 → 6 → 4
+• **Space Complexity:**
+    ◦ **Auxiliary Space:** O(1) (only pointer/scalar variables used during execution).
+    ◦ **Total Space:** O(max(m,n)) (memory allocated to store the output linked list).
