@@ -1,0 +1,32 @@
+# Add Two Numbers
+
+## Problem
+
+Given two non-empty linked lists representing two non-negative integers in reverse order, add the two numbers and return their sum as a linked list.
+
+## Core Challenge
+
+Handle:
+
+- Linked lists with different lengths ($m \neq n$)
+- Carry-over between digits
+- A remaining carry after both lists end, such as $99 + 1 = 100$
+
+---
+
+## Solution: Dummy Head + Iteration
+
+### Key Concept
+
+Use:
+
+- A **dummy head node** to simplify building the result list
+- A **`carry`** variable to store the carry-over between iterations
+
+### 1. Reversed Digit Alignment
+
+The numbers are already stored in reverse order. Therefore, the ones digits are located at the heads of `l1` and `l2`.
+
+```text
+342 → 2 → 4 → 3
+465 → 5 → 6 → 4
