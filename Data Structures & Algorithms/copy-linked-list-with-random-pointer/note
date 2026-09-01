@@ -1,0 +1,31 @@
+# **Copy Linked List with Random Pointer**
+
+Problem: Create a **Deep Copy** of a Linked List where each node contains two pointers: `.next` and `.random`
+
+Core Challenge: Each node's `.random` pointer can point anywhere (or `None`). You can't just link a copy node's `.random` to an original node—it must point to the *new cloned node*. Connecting these without losing track of new memory addresses is the main hurdle.
+
+**Solution**
+
+**Hash Map**
+
+1. The Key Hint (Hash Map): Use a Hash Map (Dictionary) as a Node Translator to store mapping pairs 
+        
+         Key (Original Node Address) ——> Value (New Copy Node Address)
+
+2. Create Nodes: Traverse the original list, create a standalone clone for each node, and store the mapping `{original_node: copy_node}` in your Hash Map
+
+3. Wire Pointers: Traverse the original list again. Look up each node's `.next` and `.random` in your Hash Map to connect the copy nodes' pointers instantly in O(1) lookup time.
+****
+
+**Optimization**
+
+1. Interleave : Insert copy nodes right after originals (A -> A' -> B -> B')
+$A'$ is always at $A.\text{next}$. Therefore, $A.\text{random}$'s copy is always at $A.\text{random}.\text{next}$
+`copy.next = l1.next` →`l1.next = copy`
+
+2. Copy Random: A'.random = A.random.next   (Direct O(1) jump!)
+`l1.next.random = l1.random.next` *(Only if `l1.random` exists!)*
+
+3. Separate: Detangle into 2 standalone lists (A -> B  AND  A' -> B')
+`l1.next = l2.next` *(Restore original list)*
+`l2.next = l2.next.next` *(Connect copy list)*
