@@ -6,121 +6,25 @@ Given an array `nums` containing $n + 1$ integers, where every integer is within
 
 ## Core Challenge
 
-Solve the problem under these constraints:
+Solve the problem under these constraints:# Find the Duplicate Number
 
-* Do not modify the original array.
-* Use only $O(1)$ extra space.
-* Do not sort the array.
-* Do not use a Hash Set to track visited numbers.
+**Problem**: Find the single duplicate number in an array of $n + 1$ integers where each integer is in the range $[1, n]$.
 
----
+**Core Challenge**: You must solve the problem without modifying the original array and using only O(1) **extra space**. You cannot sort the array or use a Hash Set to track seen numbers.
 
-## Solution: Floyd’s Cycle Detection
+**Solution**
 
-### Key Concept
+Floyd's Cycle Detection
 
-Treat the array like a linked list:
+**Key Hint:** Treat the array as a Linked List where Index —> Node and Value —> Next Pointer. Duplicate values force multiple indices to point to the same next node, creating a **cycle**.
 
-* **Array index** → Current node
-* **Value at that index** → Next node
+- **Phase 1 (Find Intersection):** Run a fast pointer (2 steps) and slow pointer (1 step) until they meet inside the loop.
 
-In other words:
+                        slow = nums[slow]  |  fast = nums[nums[fast]]
 
-```text
-index → nums[index] → nums[nums[index]] → ...
-```
+- **Phase 2 (Find Entry Point):** Reset `slow` to index `0`. Move both pointers 1 step at a time. The node where they collide is the cycle entrance—the **duplicate number**.
 
-Because the array contains $n + 1$ values but only $n$ possible numbers, at least two indices must point to the same next node. This creates a cycle.
+                        slow = nums[slow]  |  fast = nums[fast]
 
-The duplicate number is the **entry point of that cycle**.
-
----
-
-## Phase 1: Find an Intersection
-
-Initialize two pointers:
-
-```python
-slow = 0
-fast = 0
-```
-
-Move them at different speeds:
-
-* `slow` moves one step.
-* `fast` moves two steps.
-
-$$
-\text{slow} = \text{nums}[\text{slow}]
-$$
-
-$$
-\text{fast} = \text{nums}[\text{nums}[\text{fast}]]
-$$
-
-Continue until:
-
-```python
-slow == fast
-```
-
-They will meet somewhere inside the cycle, but this meeting point is not necessarily the duplicate number.
-
----
-
-## Phase 2: Find the Cycle Entrance
-
-Reset `slow` to index `0`:
-
-```python
-slow = 0
-```
-
-Keep `fast` at the intersection point found in Phase 1.
-
-Now move both pointers one step at a time:
-
-$$
-\text{slow} = \text{nums}[\text{slow}]
-$$
-
-$$
-\text{fast} = \text{nums}[\text{fast}]
-$$
-
-When they meet again, their meeting point is the cycle entrance—the **duplicate number**.
-
----
-
-## Python Implementation
-
-```python
-class Solution:
-    def findDuplicate(self, nums: list[int]) -> int:
-        slow = 0
-        fast = 0
-
-        # Phase 1: Find an intersection inside the cycle
-        while True:
-            slow = nums[slow]
-            fast = nums[nums[fast]]
-
-            if slow == fast:
-                break
-
-        # Phase 2: Find the cycle entrance
-        slow = 0
-
-        while slow != fast:
-            slow = nums[slow]
-            fast = nums[fast]
-
-        return slow
-```
-
-## Complexity
-
-| Measurement | Complexity |
-| ----------- | ---------: |
-| Time        |     $O(n)$ |
-| Extra space |     $O(1)$ |
+**Time Complexity:** O(n) 
+**Space Complexity:** O(1)
